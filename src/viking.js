@@ -49,37 +49,22 @@ class War {
 
     addViking(viking) {
         if (viking instanceof Viking) {
-            this.vikingArmy.push(viking);
+            this.#addSoldier(viking, this.vikingArmy);
         }
     }
 
     addSaxon(saxon) {
         if (saxon instanceof Saxon) {
-            this.saxonArmy.push(saxon);
+            this.#addSoldier(saxon, this.saxonArmy);
         }
     }
 
     vikingAttack() {
-        const attacker = this.vikingArmy[Math.floor(Math.random() * this.vikingArmy.length)];
-        const defenderIndex = Math.floor(Math.random() * this.saxonArmy.length);
-        const defender = this.saxonArmy[defenderIndex];
-        const result = defender.receiveDamage(attacker.strength);
-        if (defender.health <= 0) {
-            this.saxonArmy.splice(defenderIndex, 1);
-        }
-        return result;
+        return this.#soldierAttack(this.vikingArmy, this.saxonArmy);
     }
 
     saxonAttack() {
-        const attacker = this.saxonArmy[Math.floor(Math.random() * this.saxonArmy.length)];
-        const defenderIndex = Math.floor(Math.random() * this.vikingArmy.length);
-        const defender = this.vikingArmy[defenderIndex];
-
-        const result = defender.receiveDamage(attacker.strength);
-        if (defender.health <= 0) {
-            this.vikingArmy.splice(defenderIndex, 1);
-        }
-        return result;
+        return this.#soldierAttack(this.saxonArmy, this.vikingArmy);
     }
 
     showStatus() {
@@ -91,5 +76,21 @@ class War {
             return "Vikings and Saxons are still in the thick of battle.";
         }
 
+    }
+
+    #addSoldier(soldier, army) {
+        army.push(soldier);
+    }
+
+    #soldierAttack(attackerArmy, defenderArmy) {
+        const attacker = attackerArmy[Math.floor(Math.random() * attackerArmy.length)];
+        const defenderIndex = Math.floor(Math.random() * defenderArmy.length);
+        const defender = defenderArmy[defenderIndex];
+
+        const result = defender.receiveDamage(attacker.strength);
+        if (defender.health <= 0) {
+            defenderArmy.splice(defenderIndex, 1);
+        }
+        return result;
     }
 }
